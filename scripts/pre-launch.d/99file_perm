@@ -1,0 +1,4 @@
+chown -R www-data.www-data /var/www/blast || echo
+find /var/www/blast -type d -exec chmod u=rwx,g=rx,o= '{}' \; || echo
+find /var/www/blast -type f -exec chmod u=rw,g=r,o= '{}' \; || echo
+chmod a+x /var/www/blast/app/console

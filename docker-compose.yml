@@ -1,0 +1,30 @@
+version: "2"
+services:
+  blast:
+    image: sf-blast #quay.io/abretaud/sf-blast:latest
+    links:
+      - db:postgres
+    environment:
+      UPLOAD_LIMIT: 20M
+      MEMORY_LIMIT: 128M
+      DB_NAME: 'postgres'
+      ADMIN_EMAIL: 'admin@blast-server'
+      ADMIN_NAME: 'Blast admin'
+      JOBS_METHOD: 'local'
+      JOBS_WORK_DIR: '/tmp/'
+      JOBS_DRMAA_NATIVE: ''
+      CDD_DELTA_PATH: ''
+      BLAST_TITLE: 'My brand new blast server'
+      JOBS_SCHED_NAME: 'my_blast'
+    volumes:
+      - ./config/banks.yml:/var/www/blast/app/config/banks.yml:ro
+      - ./config/links.yml:/etc/blast_links/links.yml:ro
+    ports:
+      - "3000:80"
+  db:
+    image: postgres:9.5
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/data/
+    volumes:
+      - /var/lib/postgresql/data/

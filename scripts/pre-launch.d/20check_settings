@@ -1,0 +1,36 @@
+cp /opt/parameters.yml.tmpl /var/www/blast/app/config/parameters.yml
+
+sed -i 's/$DB_DRIVER/'"$DB_DRIVER"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$DB_HOST/'"$DB_HOST"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$DB_PORT/'"$DB_PORT"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$DB_NAME/'"$DB_NAME"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$DB_USER/'"$DB_USER"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$DB_PASS/'"$DB_PASS"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$MAILER_HOST/'"$MAILER_HOST"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$MAILER_USER/'"$MAILER_USER"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$MAILER_PASS/'"$MAILER_PASS"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$SECRET/'"$SECRET"'/g' /var/www/blast/app/config/parameters.yml
+
+sed -i 's/$ADMIN_NAME/'"$ADMIN_NAME"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$ADMIN_EMAIL/'"$ADMIN_EMAIL"'/g' /var/www/blast/app/config/parameters.yml
+
+sed -i 's/$JOBS_METHOD/'"$JOBS_METHOD"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's|$JOBS_WORK_DIR|'"$JOBS_WORK_DIR"'|g' /var/www/blast/app/config/parameters.yml
+sed -i 's|$JOBS_DRMAA_NATIVE|'"$JOBS_DRMAA_NATIVE"'|g' /var/www/blast/app/config/parameters.yml
+
+sed -i 's|$PRE_CMD|'"$PRE_CMD"'|g' /var/www/blast/app/config/parameters.yml
+sed -i 's|$LINK_CMD|'"$LINK_CMD"'|g' /var/www/blast/app/config/parameters.yml
+
+sed -i 's/$BLAST_TITLE/'"$BLAST_TITLE"'/g' /var/www/blast/app/config/parameters.yml
+sed -i 's/$JOBS_SCHED_NAME/'"$JOBS_SCHED_NAME"'/g' /var/www/blast/app/config/parameters.yml
+
+sed -i 's|$CDD_DELTA_PATH|'"$CDD_DELTA_PATH"'|g' /var/www/blast/app/config/parameters.yml
+
+cd /var/www/blast
+
+./app/console cache:clear --env=prod --no-debug
+./app/console cache:clear
+
+./app/console assets:install --symlink web/
+
+./app/console assetic:dump --env=prod --no-debug

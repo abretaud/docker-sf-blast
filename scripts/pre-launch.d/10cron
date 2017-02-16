@@ -1,0 +1,7 @@
+# Delete old temp files
+chmod a+x /root/
+
+echo "@daily (bash -lc 'find ${JOBS_WORK_DIR}/*/* -type d -ctime +100 -exec rm -rf {} \;')" > cron
+crontab cron && rm cron
+
+service cron start

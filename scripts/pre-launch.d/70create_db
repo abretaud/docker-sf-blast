@@ -1,0 +1,4 @@
+cd /var/www/blast
+app/console doctrine:database:create --if-not-exists
+app/console doctrine:schema:update --force
+cd ..
