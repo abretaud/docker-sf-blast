@@ -34,7 +34,10 @@ RUN curl -o /opt/drmPhpExtension_1.2.tar.gz https://gforge.inria.fr/frs/download
     && cd /opt/ \
     && tar -xzvf drmPhpExtension_1.2.tar.gz \
     && rm drmPhpExtension_1.2.tar.gz \
-    && sed -i 's/RETURN_STRING(jobid, 1)/RETURN_STRING(jobid)/g' sge/sge.c
+    && sed -i 's/RETURN_STRING(jobid, 1)/RETURN_STRING(jobid)/g' sge/sge.c \
+    && mv /usr/local/bin/php /usr/local/bin/php_orig
+
+ADD php/php_wrapper.sh /usr/local/bin/php
 
 RUN pip install pyaml yamlordereddictloader bcbio-gff biopython
 
@@ -87,6 +90,8 @@ ENV DB_HOST='postgres'\
     LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml'
 
 ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/Bundle/BlastBundle/Entity/BlastRequest.php
+
+ADD php/sge.sh /etc/profile.d/sge.sh
 
 ADD entrypoint.sh /
 ADD /scripts/ /scripts/
