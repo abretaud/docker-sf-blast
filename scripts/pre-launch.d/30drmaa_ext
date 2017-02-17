@@ -8,4 +8,5 @@ if [ "$JOBS_METHOD" == "drmaa" ]; then
     ./configure
     make
     make install
+    echo "extension=sge.so" > $PHP_INI_DIR/conf.d/docker-php-ext-sge.ini
 fi
