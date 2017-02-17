@@ -1,7 +1,9 @@
 _scheduler:
     resource: "@GenouestSchedulerBundle/Controller/SchedulerController.php"
     type: annotation
+    prefix: $BASE_URL_PATH
 
 _blast:
     resource: "@GenouestBlastBundle/Controller/BlastController.php"
     type: annotation
+    prefix: $BASE_URL_PATH
