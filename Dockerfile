@@ -67,7 +67,8 @@ RUN composer create-project symfony/framework-standard-edition --quiet blast "2.
     && rm web/favicon.ico \
     && cd .. \
     && rm -rf html \
-    && ln -s /var/www/blast/web html
+    && ln -s /var/www/blast/web html \
+    && sed -i "/createFromGlobals/a Request::setTrustedProxies(array('127.0.0.1', \$request->server->get('REMOTE_ADDR')));" /var/www/blast/web/app.php
 
 ENV DB_HOST='postgres'\
     DB_PORT='5432'\
@@ -87,7 +88,8 @@ ENV DB_HOST='postgres'\
     BLAST_TITLE=''\
     JOBS_SCHED_NAME='blast'\
     PRE_CMD=''\
-    LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml'
+    LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml'\
+    BASE_URL_PATH=''
 
 ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/Bundle/BlastBundle/Entity/BlastRequest.php
 
