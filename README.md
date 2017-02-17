@@ -120,17 +120,11 @@ To use DRMAA, you need to pay attention to several things (only tested with SGE)
 ### Scheduler binaries
 
 Depending on your cluster setup, you will probably need to mount a shared directory containing the scheduler binaries.
-It should be mounted at the same location as on the computing nodes.
+It should be mounted in /usr/local/sge/.
 
 ```
 volumes:
-    - /sge/:/sge/:ro
-```
-
-The DRMAA library should also be added to LD_LIBRARY_PATH:
-
-```
-LD_LIBRARY_PATH: /sge/lib/lx-amd64
+    - /sge/:/usr/local/sge/:ro
 ```
 
 ### DRMAA user

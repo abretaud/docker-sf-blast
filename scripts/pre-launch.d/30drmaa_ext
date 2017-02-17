@@ -3,6 +3,7 @@ if [ "$JOBS_METHOD" == "drmaa" ]; then
     # Needs to be done ar startup as it must be compiled with mounted sge install
 
     echo "Compiling PHP DRMAA extension"
+    LD_LIBRARY_PATH=/usr/local/sge/lib/lx-amd64:$LD_LIBRARY_PATH
     cd /opt/sge
     ./configure
     make
