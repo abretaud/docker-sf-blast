@@ -140,7 +140,7 @@ GID: 40259
 
 When launching the container, it will automatically configure itself to run apache with the user and group names and ids specified.
 
-### Registering submission node
+### Dealing with restriction on submission node
 
 By default the container is using the default docker `bridge` network. One of the consequence is that the container's hostname is a random string.
 As SGE allows submitting jobs from a list of known hostname, having a variable hostname is a problem.
@@ -154,6 +154,12 @@ services:
     links:
       - db:postgres
     hostname: my_blast
+```
+
+The master node does some checks on the hostname and corresponding ip, so you might need to add soemthing like this in `/etc/hosts`:
+
+```
+<docker-host-ip> my_blast <real-name-of-the-docker-host>
 ```
 
 ### Blast binaries
