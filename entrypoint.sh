@@ -28,6 +28,9 @@ DB_DRIVER='pgsql'
 
 SECRET=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1`
 
+: ${APACHE_RUN_USER:='www-data'}
+: ${APACHE_RUN_GROUP:='www-data'}
+
 export DB_DRIVER DB_HOST DB_PORT DB_NAME DB_USER DB_PASS SECRET
 echo -e "# Database configuration\n
 export DB_DRIVER=${DB_DRIVER} DB_HOST=${DB_HOST} DB_PORT=${DB_PORT} DB_NAME=${DB_NAME} DB_USER=${DB_USER} DB_PASS=${DB_PASS} SECRET=${SECRET}" >> /etc/profile

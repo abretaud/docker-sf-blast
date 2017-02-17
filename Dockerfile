@@ -27,6 +27,12 @@ RUN apt-get -q update && \
  && a2enmod rewrite && a2enmod proxy && a2enmod proxy_http \
  && npm install -g uglify-js uglifycss
 
+# Install PHP DRMAA extension
+RUN curl -o /opt/drmPhpExtension_1.2.tar.gz https://gforge.inria.fr/frs/download.php/file/28916/drmPhpExtension_1.2.tar.gz \
+    && cd /opt/ \
+    && tar -xzvf drmPhpExtension_1.2.tar.gz \
+    && rm drmPhpExtension_1.2.tar.gz
+
 RUN pip install pyaml yamlordereddictloader bcbio-gff biopython
 
 RUN curl -o /usr/local/bin/blastxml_to_gapped_gff3.py https://raw.githubusercontent.com/galaxyproject/tools-iuc/master/tools/blastxml_to_gapped_gff3/blastxml_to_gapped_gff3.py && \

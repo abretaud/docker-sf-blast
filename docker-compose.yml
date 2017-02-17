@@ -1,7 +1,7 @@
 version: "2"
 services:
   blast:
-    image: sf-blast #quay.io/abretaud/sf-blast:latest
+    image: quay.io/abretaud/sf-blast:latest
     links:
       - db:postgres
     environment:

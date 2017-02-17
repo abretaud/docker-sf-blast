@@ -1,0 +1,10 @@
+if [ "$JOBS_METHOD" == "drmaa" ]; then
+    # Install PHP DRMAA extension
+    # Needs to be done ar startup as it must be compiled with mounted sge install
+
+    echo "Compiling PHP DRMAA extension"
+    cd /opt/sge
+    ./configure
+    make
+    make install
+fi

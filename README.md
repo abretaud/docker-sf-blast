@@ -113,4 +113,55 @@ JOBS_DRMAA_NATIVE: '' # Any native specification you want to pass to DRMAA (when
 JOBS_SCHED_NAME: 'blast' # The names given to jobs (in particular for drmaa jobs)
 ```
 
+## Using DRMAA
+
+To use DRMAA, you need to pay attention to several things (only tested with SGE):
+
+### Scheduler binaries
+
+Depending on your cluster setup, you will probably need to mount a shared directory containing the scheduler binaries.
+It should be mounted at the same location as on the computing nodes.
+
+```
+volumes:
+    - /sge/:/sge/:ro
+```
+
+The DRMAA library should also be added to LD_LIBRARY_PATH:
+
+```
+LD_LIBRARY_PATH: /sge/lib/lx-amd64
+```
+
+### DRMAA user
+
+Jobs will probably need to be launched by a user known by the scheduler. You will to use the following options to configure this:
+
+```
+APACHE_RUN_USER: 'submituser'
+APACHE_RUN_GROUP: 'submitgroup'
+UID: 55914
+GID: 40259
+```
+
+When launching the container, it will automatically configure itself to run apache with the user and group names and ids specified.
+
+### Registering submission node
+
+By default the container is using the default docker `bridge` network. One of the consequence is that the container's hostname is a random string.
+As SGE allows submitting jobs from a list of known hostname, having a variable hostname is a problem.
+To fix this, we need to give a fixed hostname to our container. This hostname must be registered as a submit_host (`qconf -as my_blast`).
+
+```
+version: "2"
+services:
+  blast:
+    image: quay.io/abretaud/sf-blast:latest
+    links:
+      - db:postgres
+    hostname: my_blast
+```
+
+### Blast binaries
+
 When using drmaa, ensure that blast binaries + python (with bcbio-gff, yaml and yamlordereddictloader modules) are in the PATH (using PRE_CMD).
