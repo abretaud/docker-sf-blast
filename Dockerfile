@@ -21,11 +21,13 @@ RUN apt-get -q update && \
     DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
     file libfreetype6 libjpeg62 libpng12-0 libpq-dev libx11-6 libxpm4 \
     postgresql-client wget patch git unzip npm ncbi-blast+ python-pip libyaml-dev \
-    python-dev cron \
+    python-dev cron libhwloc5 \
  && docker-php-ext-install mbstring pdo_pgsql zip \
  && rm -rf /var/lib/apt/lists/* \
  && a2enmod rewrite && a2enmod proxy && a2enmod proxy_http \
- && npm install -g uglify-js uglifycss
+ && npm install -g uglify-js uglifycss \
+ && ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libssl.so.10 \
+ && ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/lib/x86_64-linux-gnu/libcrypto.so.10
 
 # Install PHP DRMAA extension
 RUN curl -o /opt/drmPhpExtension_1.2.tar.gz https://gforge.inria.fr/frs/download.php/file/28916/drmPhpExtension_1.2.tar.gz \
