@@ -91,8 +91,6 @@ ENV DB_HOST='postgres'\
 
 ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/Bundle/BlastBundle/Entity/BlastRequest.php
 
-ADD php/sge.sh /etc/profile.d/sge.sh
-
 ADD entrypoint.sh /
 ADD /scripts/ /scripts/
 ADD blast_links.py /usr/local/bin/blast_links.py
