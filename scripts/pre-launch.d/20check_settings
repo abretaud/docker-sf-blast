@@ -28,9 +28,6 @@ sed -i 's|$CDD_DELTA_PATH|'"$CDD_DELTA_PATH"'|g' /var/www/blast/app/config/param
 
 sed -i 's|$BASE_URL_PATH|'"$BASE_URL_PATH"'|g' /var/www/blast/app/config/parameters.yml
 
-
-sed -i 's|$BASE_URL_PATH|'"$BASE_URL_PATH"'|g' /var/www/blast/app/config/routing.yml
-
 cd /var/www/blast
 
 ./app/console cache:clear --env=prod --no-debug --no-warmup

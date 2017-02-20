@@ -51,7 +51,7 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer --snapshot \
     && rm -f /tmp/composer-setup.*
 
-ENV CACHE_BUST=1
+ENV CACHE_BUST=2
 
 # Install Symfony and blast bundles
 RUN composer create-project symfony/framework-standard-edition --quiet blast "2.8.*" \
