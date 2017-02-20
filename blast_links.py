@@ -71,7 +71,7 @@ class LinkInjector():
                         if regex == '*': # Add a default regex
                             regex = '([\w.-]+)'
                         if not regex.startswith('^'): # Add the seq id prefix rule (e.g. 'lcl|' or '>lcl|', ...)
-                            regex = '^(>?(?:[\w.-]+\|)?)?' + regex
+                            regex = '^(\s*>?(?:[\w.-]+\|)?)?' + regex
                         if url.startswith('http'): # Convert simple url to html link
                             url = '<a href="%s">{id}</a>' % url
                         self.links.append((db, regex,  url))
