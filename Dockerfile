@@ -41,9 +41,6 @@ ADD php/php_wrapper.sh /usr/local/bin/php
 
 RUN pip install pyaml yamlordereddictloader bcbio-gff biopython
 
-RUN curl -o /usr/local/bin/blastxml_to_gapped_gff3.py https://raw.githubusercontent.com/galaxyproject/tools-iuc/master/tools/blastxml_to_gapped_gff3/blastxml_to_gapped_gff3.py && \
-    chmod a+x /usr/local/bin/blastxml_to_gapped_gff3.py
-
 # Install composer
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
@@ -95,7 +92,8 @@ ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/B
 
 ADD entrypoint.sh /
 ADD /scripts/ /scripts/
-ADD blast_links.py /usr/local/bin/blast_links.py
+ADD bin/blast_links.py /usr/local/bin/blast_links.py
+ADD bin/xml2gff.py /usr/local/bin/xml2gff.py
 
 ADD config/parameters.yml.tmpl /opt/parameters.yml.tmpl
 ADD config/config.yml /var/www/blast/app/config/config.yml
