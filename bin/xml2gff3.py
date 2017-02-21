@@ -34,15 +34,20 @@ def blastxml2gff3(blastxml):
                     "source": "blast",
                     "score": hsp.expect,
                     "accession": hit.accession,
-                    "hit_name": record.query
+                    "hit_name": record.query,
+                    "Name": record.query
                 }
                 desc = hit.title.split(' >')[0]
                 desc = desc[desc.index(' '):]
                 if desc != ' No definition line':
                     qualifiers['description'] = desc
 
-                parent_match_start = hsp.sbjct_start
-                parent_match_end = hsp.sbjct_end
+                if hsp.sbjct_start < hsp.sbjct_end:
+                    parent_match_start = hsp.sbjct_start
+                    parent_match_end = hsp.sbjct_end
+                else:
+                    parent_match_start = hsp.sbjct_end
+                    parent_match_end = hsp.sbjct_start
 
                 # The ``match`` feature will hold one or more ``match_part``s
                 top_feature = SeqFeature(
@@ -53,12 +58,15 @@ def blastxml2gff3(blastxml):
                 top_feature.sub_features = []
 
                 part_qualifiers = {
-                    "source": "blast",
-                    'ID': hit.hit_id
+                    "source": "blast"
                 }
 
-                match_part_start = hsp.sbjct_start
-                match_part_end = hsp.sbjct_end
+                if hsp.sbjct_start < hsp.sbjct_end:
+                    match_part_start = hsp.sbjct_start
+                    match_part_end = hsp.sbjct_end
+                else:
+                    match_part_start = hsp.sbjct_end
+                    match_part_end = hsp.sbjct_start
 
                 top_feature.sub_features.append(
                     SeqFeature(
