@@ -45,6 +45,7 @@ class LinkInjector():
             db:                     '\w+genome\w+'    # optional regex to restrict to a specific blast database
             '(scaffold\w+)':         '<a href="http://tripal/{id}"></a> <a href="http://jbrowse?loc={id}">JBrowse</a>'    # key is a regex to match seq ids, value is a full html block, or simply an http url
             '(superscaffold\w+)':    'http://tripal/{id}'
+            '(hyperscaffold\w+)':    'http://jbrowse?loc={id}&addStores={"url":{"type":"JBrowse/Store/SeqFeature/GFF3","urlTemplate":"{gff_url}"}}&addTracks=[{"label":"genes","type":"JBrowse/View/Track/CanvasFeatures","store":"url"}]' # {gff_url} will be replaced by the url of the gff output
         protein:
             db:                     '.+protein.+'
             '*':                    'http://tripal/{id}'
@@ -137,6 +138,22 @@ class LinkInjector():
                 reached_summary = False
                 started_summary = False
                 finished_summary = False
+
+            if line.startswith('</BODY>'):
+                js_replace = """<script type=\"text/javascript\">
+window.onload = function(){
+    var as = document.getElementsByTagName("a");
+    var gff_url = '';
+    for(var i = 0; i < as.length; i++){
+        if (as[i].innerHTML == 'GFF3 blast output')
+             gff_url = as[i].href;
+    }
+    for(var i = 0; i < as.length; i++){
+       as[i].href = as[i].href.replace('{gff_url}', gff_url);
+    }
+}
+</script>"""
+                print(js_replace, file=self.args.outfile)
 
             print(line, file=self.args.outfile)
 
