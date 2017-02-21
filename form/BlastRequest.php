@@ -775,9 +775,9 @@ class BlastRequest implements BlastRequestInterface
         mkdir($workDir.'bin/');
         copy('/etc/blast_links/links.yml', $workDir.'bin/links.yml');
         copy('/usr/local/bin/blast_links.py', $workDir.'bin/blast_links.py');
-        copy('/usr/local/bin/blastxml_to_gapped_gff3.py', $workDir.'bin/blastxml_to_gapped_gff3.py');
+        copy('/usr/local/bin/xml2gff3.py', $workDir.'bin/xml2gff3.py');
         chmod($workDir.'bin/blast_links.py', 0755);
-        chmod($workDir.'bin/blastxml_to_gapped_gff3.py', 0755);
+        chmod($workDir.'bin/xml2gff3.py', 0755);
 
         return $job;
     }

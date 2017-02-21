@@ -48,7 +48,7 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer --snapshot \
     && rm -f /tmp/composer-setup.*
 
-ENV CACHE_BUST=2
+ENV CACHE_BUST=3
 
 # Install Symfony and blast bundles
 RUN composer create-project symfony/framework-standard-edition --quiet blast "2.8.*" \
@@ -93,7 +93,7 @@ ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/B
 ADD entrypoint.sh /
 ADD /scripts/ /scripts/
 ADD bin/blast_links.py /usr/local/bin/blast_links.py
-ADD bin/blastxml_to_gapped_gff3.py /usr/local/bin/blastxml_to_gapped_gff3.py
+ADD bin/xml2gff3.py /usr/local/bin/xml2gff3.py
 
 ADD config/parameters.yml.tmpl /opt/parameters.yml.tmpl
 ADD config/config.yml /var/www/blast/app/config/config.yml
