@@ -93,7 +93,7 @@ ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/B
 ADD entrypoint.sh /
 ADD /scripts/ /scripts/
 ADD bin/blast_links.py /usr/local/bin/blast_links.py
-ADD bin/xml2gff.py /usr/local/bin/xml2gff.py
+ADD bin/blastxml_to_gapped_gff3.py /usr/local/bin/blastxml_to_gapped_gff3.py
 
 ADD config/parameters.yml.tmpl /opt/parameters.yml.tmpl
 ADD config/config.yml /var/www/blast/app/config/config.yml
