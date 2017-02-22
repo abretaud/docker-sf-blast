@@ -75,15 +75,17 @@ To add hyperlinks to the blast result html file, you should populate the config/
 Here's an example of links.yml:
 
 ```yml
-genome:    # you can give any name, it is not used by the script
-    db:                     '\w+genome\w+'    # optional regex to restrict to a specific blast database
-    '(scaffold\w+)':         '<a href="http://tripal/{id}"></a> <a href="http://jbrowse?loc={id}">JBrowse</a>'    # key is a regex to match seq ids, value is a full html block, or simply an http url
-    '(superscaffold\w+)':    'http://tripal/{id}'
-protein:
-    db:                     '.+protein.+'
-    '*':                    'http://tripal/{id}'
-other:
-    '*':                    'http://google/{id}'
+        genome:    # you can give any name, it is not used by the script
+            db:                     '\w+genome\w+'    # optional regex to restrict to a specific blast database
+            '(scaffold\w+)':         '<a href="http://tripal/{id}"></a> <a href="http://jbrowse?loc={id}">JBrowse</a>'    # key is a regex to match seq ids, value is a full html block, or simply an http url
+            '(superscaffold\w+)':    'http://tripal/{id}'
+            '(hyperscaffold\w+)':    'http://jbrowse?loc={id}{jbrowse_track}' # {jbrowse_track} will be replaced by proper argument to add a custom jbrowse track based on the gff_url
+            '(hyperscaffold\w+)':    'http://google/{gff_url}' # {gff_url} will be replaced by the url of the gff output
+        protein:
+            db:                     '.+protein.+'
+            '*':                    'http://tripal/{id}'
+        other:
+            '*':                    'http://google/{id}'
 ```
 
 The following environment variables are also available:

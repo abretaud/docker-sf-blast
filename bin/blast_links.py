@@ -45,7 +45,8 @@ class LinkInjector():
             db:                     '\w+genome\w+'    # optional regex to restrict to a specific blast database
             '(scaffold\w+)':         '<a href="http://tripal/{id}"></a> <a href="http://jbrowse?loc={id}">JBrowse</a>'    # key is a regex to match seq ids, value is a full html block, or simply an http url
             '(superscaffold\w+)':    'http://tripal/{id}'
-            '(hyperscaffold\w+)':    'http://jbrowse?loc={id}&addStores={"url":{"type":"JBrowse/Store/SeqFeature/GFF3","urlTemplate":"{gff_url}"}}&addTracks=[{"label":"genes","type":"JBrowse/View/Track/CanvasFeatures","store":"url"}]' # {gff_url} will be replaced by the url of the gff output
+            '(hyperscaffold\w+)':    'http://jbrowse?loc={id}{jbrowse_track}' # {jbrowse_track} will be replaced by proper argument to add a custom jbrowse track based on the gff_url
+            '(hyperscaffold\w+)':    'http://google/{gff_url}' # {gff_url} will be replaced by the url of the gff output
         protein:
             db:                     '.+protein.+'
             '*':                    'http://tripal/{id}'
@@ -159,6 +160,8 @@ window.onload = function(){
 
     def inject_link(self, db, line):
 
+        jbrowse_track = "&addStores=%7B%22url%22%3A%7B%22type%22%3A%22JBrowse%2FStore%2FSeqFeature%2FGFF3%22%2C%22urlTemplate%22%3A%22{gff_url}%22%7D%7D&addTracks=%5B%7B%22label%22%3A%22Blast results%22%2C%22type%22%3A%22JBrowse%2FView%2FTrack%2FCanvasFeatures%22%2C%22store%22%3A%22url%22%7D%5D"
+
         for rule in self.links:
             if re.match(rule[0], db):
                 id_search = re.search(rule[1], line)
@@ -166,6 +169,7 @@ window.onload = function(){
                     seq_id = id_search.group(2)
                     clean_link = rule[2].replace('{db}', db)
                     clean_link = clean_link.replace('{id}', seq_id)
+                    clean_link = clean_link.replace('{jbrowse_track}', jbrowse_track)
                     return re.sub(rule[1], '\\1'+clean_link, line)
 
         return line
