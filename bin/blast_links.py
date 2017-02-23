@@ -46,7 +46,8 @@ class LinkInjector():
             '(scaffold\w+)':         '<a href="http://tripal/{id}"></a> <a href="http://jbrowse?loc={id}">JBrowse</a>'    # key is a regex to match seq ids, value is a full html block, or simply an http url
             '(superscaffold\w+)':    'http://tripal/{id}'
             '(hyperscaffold\w+)':    'http://jbrowse?loc={id}{jbrowse_track}' # {jbrowse_track} will be replaced by proper argument to add a custom jbrowse track based on the gff_url
-            '(hyperscaffold\w+)':    'http://google/{gff_url}' # {gff_url} will be replaced by the url of the gff output
+            '(xxscaffold\w+)':    'http://apollo?loc={id}{apollo_track}' # {apollo_track} will be replaced by proper argument to add a custom jbrowse track based on the gff_url
+            '(yyscaffold\w+)':    'http://google/{gff_url}' # {gff_url} will be replaced by the url of the gff output
         protein:
             db:                     '.+protein.+'
             '*':                    'http://tripal/{id}'
@@ -160,7 +161,10 @@ window.onload = function(){
 
     def inject_link(self, db, line):
 
-        jbrowse_track = "&addStores=%7B%22url%22%3A%7B%22type%22%3A%22JBrowse%2FStore%2FSeqFeature%2FGFF3%22%2C%22urlTemplate%22%3A%22{gff_url}%22%7D%7D&addTracks=%5B%7B%22label%22%3A%22Blast results%22%2C%22type%22%3A%22JBrowse%2FView%2FTrack%2FCanvasFeatures%22%2C%22store%22%3A%22url%22%7D%5D"
+        # Url encoded json
+        jbrowse_track = "&addStores=%7B%22url%22%3A%7B%22type%22%3A%22JBrowse%2FStore%2FSeqFeature%2FGFF3%22%2C%22urlTemplate%22%3A%22{gff_url}%2522%257D%257D&addTracks=%5B%7B%22label%22%3A%22Blast results%22%2C%22type%22%3A%22JBrowse%2FView%2FTrack%2FCanvasFeatures%22%2C%22store%22%3A%22url%22%7D%5D&tracks=Blast%20results"
+        # Double url encoded json (same as for jbrowse, but for x reason it needs to be encoded 2 times...)
+        apollo_track = "&addStores=%257B%2522url%2522%253A%257B%2522type%2522%253A%2522JBrowse%252FStore%252FSeqFeature%252FGFF3%2522%252C%2522urlTemplate%2522%253A%2522{gff_url}%22%7D%7D&addTracks=%255B%257B%2522label%2522%253A%2522Blast%20results%2522%252C%2522type%2522%253A%2522JBrowse%252FView%252FTrack%252FCanvasFeatures%2522%252C%2522store%2522%253A%2522url%2522%257D%255D%22&tracks=Blast%20results"
 
         for rule in self.links:
             if re.match(rule[0], db):
@@ -170,6 +174,7 @@ window.onload = function(){
                     clean_link = rule[2].replace('{db}', db)
                     clean_link = clean_link.replace('{id}', seq_id)
                     clean_link = clean_link.replace('{jbrowse_track}', jbrowse_track)
+                    clean_link = clean_link.replace('{apollo_track}', apollo_track)
                     return re.sub(rule[1], '\\1'+clean_link, line)
 
         return line
