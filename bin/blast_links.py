@@ -162,9 +162,9 @@ window.onload = function(){
     def inject_link(self, db, line):
 
         # Url encoded json
-        jbrowse_track = "&addStores=%7B%22url%22%3A%7B%22type%22%3A%22JBrowse%2FStore%2FSeqFeature%2FGFF3%22%2C%22urlTemplate%22%3A%22{gff_url}%2522%257D%257D&addTracks=%5B%7B%22label%22%3A%22Blast results%22%2C%22type%22%3A%22JBrowse%2FView%2FTrack%2FCanvasFeatures%22%2C%22store%22%3A%22url%22%7D%5D&tracks=Blast%20results"
+        jbrowse_track = "&addStores=%7B%22url%22%3A%7B%22type%22%3A%22JBrowse%2FStore%2FSeqFeature%2FGFF3%22%2C%22urlTemplate%22%3A%22{gff_url}%22%7D%7D&addTracks=%5B%7B%22label%22%3A%22Blast results%22%2C%22type%22%3A%22JBrowse%2FView%2FTrack%2FCanvasFeatures%22%2C%22store%22%3A%22url%22%7D%5D&tracks=Blast%20results"
         # Double url encoded json (same as for jbrowse, but for x reason it needs to be encoded 2 times...)
-        apollo_track = "&addStores=%257B%2522url%2522%253A%257B%2522type%2522%253A%2522JBrowse%252FStore%252FSeqFeature%252FGFF3%2522%252C%2522urlTemplate%2522%253A%2522{gff_url}%22%7D%7D&addTracks=%255B%257B%2522label%2522%253A%2522Blast%20results%2522%252C%2522type%2522%253A%2522JBrowse%252FView%252FTrack%252FCanvasFeatures%2522%252C%2522store%2522%253A%2522url%2522%257D%255D%22&tracks=Blast%20results"
+        apollo_track = "&addStores=%257B%2522url%2522%253A%257B%2522type%2522%253A%2522JBrowse%252FStore%252FSeqFeature%252FGFF3%2522%252C%2522urlTemplate%2522%253A%2522{gff_url}%2522%257D%257D&addTracks=%255B%257B%2522label%2522%253A%2522Blast%20results%2522%252C%2522type%2522%253A%2522JBrowse%252FView%252FTrack%252FCanvasFeatures%2522%252C%2522store%2522%253A%2522url%2522%257D%255D%22&tracks=Blast%2520results"
 
         for rule in self.links:
             if re.match(rule[0], db):
