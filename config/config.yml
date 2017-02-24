@@ -84,7 +84,7 @@ genouest_blast:
 genouest_scheduler:
     method:               %jobs_method%
     work_dir:             %jobs_work_dir%
-    result_url:           %base_url_path%/tmp/
+    result_url:           %base_url_path%tmp/
     mail_bin:             "/bin/mail"
     from_email:           %sender_email%
     history_length:       8
