@@ -86,7 +86,7 @@ ENV DB_HOST='postgres'\
     JOBS_SCHED_NAME='blast'\
     PRE_CMD=''\
     LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml'\
-    BASE_URL_PATH=''
+    BASE_URL_PATH='/'
 
 ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/Bundle/BlastBundle/Entity/BlastRequest.php
 
