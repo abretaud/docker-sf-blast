@@ -33,11 +33,14 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        main_title: '%blast_title%'
 
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
     filters:
+        cssrewrite: ~
         uglifycss:
             bin: /usr/local/bin/uglifycss
         uglifyjs2:

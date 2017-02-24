@@ -26,6 +26,7 @@ RUN apt-get -q update && \
  && rm -rf /var/lib/apt/lists/* \
  && a2enmod rewrite && a2enmod proxy && a2enmod proxy_http \
  && npm install -g uglify-js uglifycss \
+ && ln -s /usr/bin/nodejs /usr/bin/node \
  && ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libssl.so.10 \
  && ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/lib/x86_64-linux-gnu/libcrypto.so.10
 

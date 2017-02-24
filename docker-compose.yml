@@ -17,6 +17,7 @@ services:
       BLAST_TITLE: 'My brand new blast server'
       JOBS_SCHED_NAME: 'my_blast'
     volumes:
+      - ./blast-themes/bipaa/:/var/www/blast/app/Resources/:ro
       - ./config/banks.yml:/var/www/blast/app/config/banks.yml:ro
       - ./config/links.yml:/etc/blast_links/links.yml:ro
     ports:

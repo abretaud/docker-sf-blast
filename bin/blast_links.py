@@ -147,7 +147,7 @@ window.onload = function(){
     var as = document.getElementsByTagName("a");
     var gff_url = '';
     for(var i = 0; i < as.length; i++){
-        if (as[i].innerHTML == 'GFF3 blast output')
+        if (as[i].innerHTML == 'GFF3')
              gff_url = as[i].href;
     }
     for(var i = 0; i < as.length; i++){

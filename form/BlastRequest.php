@@ -722,18 +722,20 @@ class BlastRequest implements BlastRequestInterface
         $resultViewers = array();
 
         if ($this->program == 'blastp' && $this->blastpType == 'phiblast') {
-            $resultFiles = array('HTML blast output' => $uid.'.html',
-                                 'Executed command' => "blast_command.txt");
+            $resultFiles = array('HTML' => $uid.'.html',
+                                 'Command' => "blast_command.txt",
+                                 'HTML blast output' => $uid.'.html');
         }
         else {
-            $resultFiles = array('HTML blast output' => $uid.'.html',
-                                   'GFF3 blast output' => $uid.'.gff3',
-                                   'Text blast output' => $uid.'.txt',
-                                   'Comma-separated blast output' => $uid.'.csv',
-                                   'Tabular blast output' => $uid.'.tsv',
-                                   'XML blast output' => $uid.'.xml',
-                                   'ASN.1 archive blast output' => $uid.'.asn',
-                                   'Executed command' => "blast_command.txt");
+            $resultFiles = array('HTML' => $uid.'.html',
+                                   'GFF3' => $uid.'.gff3',
+                                   'Text' => $uid.'.txt',
+                                   'CSV' => $uid.'.csv',
+                                   'TSV' => $uid.'.tsv',
+                                   'XML' => $uid.'.xml',
+                                   'ASN.1' => $uid.'.asn',
+                                   'Command' => "blast_command.txt",
+                                   'HTML blast output' => $uid.'.html'); // Last one is a fake one to detect job finished in ok state
         }
 
         if ($this->program == 'blastp' && (($this->blastpType == 'psiblast') || ($this->blastpType == 'deltablast'))) {
