@@ -35,6 +35,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         main_title: '%blast_title%'
+        base_url_path: %base_url_path%
 
 # Assetic Configuration
 assetic:
