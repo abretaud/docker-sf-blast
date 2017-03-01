@@ -163,7 +163,7 @@ window.onload = function(){
 
         # Url encoded json
         jbrowse_track = "&addStores=%7B%22url%22%3A%7B%22type%22%3A%22JBrowse%2FStore%2FSeqFeature%2FGFF3%22%2C%22urlTemplate%22%3A%22{gff_url}%22%7D%7D"
-        jbrowse_track += "&addTracks=%5B%7B%22label%22%3A%22Blast results%22%2C%22type%22%3A%22JBrowse%2FView%2FTrack%2FCanvasFeatures%22%2C%22store%22%3A%22url%22%7D%5D"
+        jbrowse_track += "&addTracks=%5B%7B%22label%22%3A%22Blast results%22%2C%22type%22%3A%22JBrowse%2FView%2FTrack%HTMLFeatures%22%2C%22store%22%3A%22url%22%7D%5D"
         jbrowse_track += "&tracks=Blast%20results"
 
         # Apollo looks the same as JBrowse for now
