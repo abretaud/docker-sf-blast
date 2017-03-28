@@ -29,7 +29,8 @@ class LinkInjector():
     def parse_args(self):
 
         parser = argparse.ArgumentParser()
-        parser.add_argument( '--config', help='Path to a config file (default=links_config.yml in script directory' )
+        parser.add_argument('--config', help='Path to a config file (default=links_config.yml in script directory)' )
+        parser.add_argument('--gff-url', help='URL to GFF3 file' )
         parser.add_argument('infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
         parser.add_argument('outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
         self.args = parser.parse_args()
@@ -71,6 +72,7 @@ class LinkInjector():
                 for regex in conf_cat:
                     if regex != 'db': # skip db line
                         url = conf_cat[regex]
+                        url.replace('{gff_url}', self.args.gff_url)
                         if regex == '*': # Add a default regex
                             regex = '([\w.-]+)'
                         if not regex.startswith('^'): # Add the seq id prefix rule (e.g. 'lcl|' or '>lcl|', ...)
@@ -141,28 +143,12 @@ class LinkInjector():
                 started_summary = False
                 finished_summary = False
 
-            if line.startswith('</BODY>'):
-                js_replace = """<script type=\"text/javascript\">
-window.onload = function(){
-    var as = document.getElementsByTagName("a");
-    var gff_url = '';
-    for(var i = 0; i < as.length; i++){
-        if (as[i].innerHTML == 'GFF3')
-             gff_url = as[i].href;
-    }
-    for(var i = 0; i < as.length; i++){
-       as[i].href = as[i].href.replace('{gff_url}', gff_url);
-    }
-}
-</script>"""
-                print(js_replace, file=self.args.outfile)
-
             print(line, file=self.args.outfile)
 
     def inject_link(self, db, line):
 
         # Url encoded json
-        jbrowse_track = "&addStores=%7B%22url%22%3A%7B%22type%22%3A%22JBrowse%2FStore%2FSeqFeature%2FGFF3%22%2C%22urlTemplate%22%3A%22{gff_url}%22%7D%7D"
+        jbrowse_track = "&addStores=%7B%22url%22%3A%7B%22type%22%3A%22JBrowse%2FStore%2FSeqFeature%2FGFF3%22%2C%22urlTemplate%22%3A%22" + self.args.gff_url + "%22%7D%7D"
         jbrowse_track += "&addTracks=%5B%7B%22label%22%3A%22Blast results%22%2C%22type%22%3A%22JBrowse%2FView%2FTrack%2FHTMLFeatures%22%2C%22store%22%3A%22url%22%7D%5D"
         jbrowse_track += "&tracks=Blast%20results"
 

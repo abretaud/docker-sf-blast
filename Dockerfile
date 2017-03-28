@@ -49,7 +49,7 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer --snapshot \
     && rm -f /tmp/composer-setup.*
 
-ENV CACHE_BUST=3
+ENV CACHE_BUST=4
 
 # Install Symfony and blast bundles
 RUN composer create-project symfony/framework-standard-edition --quiet blast "2.8.*" \
@@ -86,7 +86,7 @@ ENV DB_HOST='postgres'\
     BLAST_TITLE=''\
     JOBS_SCHED_NAME='blast'\
     PRE_CMD=''\
-    LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml'\
+    LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml --gff-url \$GFF3_URL'\
     BASE_URL_PATH='/'
 
 ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/Bundle/BlastBundle/Entity/BlastRequest.php
