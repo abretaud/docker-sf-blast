@@ -24,12 +24,17 @@ def blastxml2gff3(blastxml):
 
         for hit in record.alignments:
             if hit.accession in records:
-                rec = record[hit.accession]
+                rec = records[hit.accession]
             else:
                 rec = SeqRecord(Seq("ACTG"), id=hit.accession)
 
             for hsp in hit.hsps:
-                strand  = hsp.frame[1]
+                if hsp.frame[1] < 0:
+                    strand = -1
+                elif hsp.frame[1] == 0:
+                    strand = 0
+                else:
+                    strand = 1
                 qualifiers = {
                     "source": "blast",
                     "score": hsp.expect,
