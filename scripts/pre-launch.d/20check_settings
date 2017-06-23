@@ -30,6 +30,9 @@ sed -i 's|$BASE_URL_PATH|'"$BASE_URL_PATH"'|g' /var/www/blast/app/config/paramet
 
 cd /var/www/blast
 
+# Remove this because of bug https://bugs.php.net/bug.php?id=54097 when using overlayfs
+rm -rf app/cache/dev
+
 ./app/console cache:clear --env=prod --no-debug --no-warmup
 ./app/console cache:clear --no-warmup
 
