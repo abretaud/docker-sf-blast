@@ -40,7 +40,7 @@ RUN curl -o /opt/drmPhpExtension_1.2.tar.gz https://gforge.inria.fr/frs/download
 
 ADD php/php_wrapper.sh /usr/local/bin/php
 
-RUN pip install pyaml yamlordereddictloader bcbio-gff numby biopython
+RUN pip install pyaml yamlordereddictloader bcbio-gff numpy biopython
 
 # Install composer
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
