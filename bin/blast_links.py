@@ -84,6 +84,7 @@ class LinkInjector():
     def parse_html(self):
 
         current_db = None # Name of the blast database that was used
+        full_db = None # Are we sure the name is full (in case of long name on multiple lines)
         reached_summary = False # Did we reached the beginning of the summary?
         started_summary = False # Did we start to inject links in the summary?
         finished_summary = False # Did we pass the end of the summary?
@@ -100,6 +101,14 @@ class LinkInjector():
 
                 print(line, file=self.args.outfile)
                 continue # We have not yet (or just) reached the database line, skip to next line
+
+            if not full_db:
+                full_db = True # We consider that there will not be db names longer than 2 lines
+                if not line.startswith(' '):
+                    current_db += line
+
+                print(line, file=self.args.outfile)
+                continue
 
             # Find the result summary
             if not reached_summary:
