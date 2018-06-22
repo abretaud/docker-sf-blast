@@ -5,11 +5,12 @@ MAINTAINER Anthony Bretaudeau <anthony.bretaudeau@inra.fr>
 WORKDIR /var/www
 
 # Install packages and PHP-extensions
-RUN apt-get -q update && \
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get -q update && \
     DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
-    file libfreetype6 libjpeg62 libpng12-0 libpq-dev libx11-6 libxpm4 gpg \
-    postgresql-client wget patch git unzip npm ncbi-blast+ python-pip libyaml-dev \
-    python-dev cron libhwloc5 \
+    file libfreetype6 libjpeg62 libpng16-16 libpq-dev libx11-6 libxpm4 gpg \
+    postgresql-client wget patch git unzip ncbi-blast+ python-pip libyaml-dev \
+    python-dev cron libhwloc5 nodejs build-essential libssl-dev \
  && docker-php-ext-install mbstring pdo_pgsql zip \
  && rm -rf /var/lib/apt/lists/* \
  && a2enmod rewrite && a2enmod proxy && a2enmod proxy_http \
