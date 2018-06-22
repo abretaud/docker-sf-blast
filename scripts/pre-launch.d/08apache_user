@@ -1,10 +1,9 @@
 if [ -n "$GID" ]; then
 	GIDoption="--gid $GID"
+	getent group $APACHE_RUN_GROUP &> /dev/null || groupadd $GIDoption $APACHE_RUN_GROUP
 fi
 
 if [ -n "$UID" ]; then
 	UIDoption="--uid $UID"
+	id -u $APACHE_RUN_USER &> /dev/null || useradd --no-create-home --no-user-group $UIDoption $GIDoption $APACHE_RUN_USER
 fi
-
-getent group $APACHE_RUN_GROUP &> /dev/null || groupadd $GIDoption $APACHE_RUN_GROUP
-id -u $APACHE_RUN_USER &> /dev/null || useradd --no-create-home --no-user-group $UIDoption $GIDoption $APACHE_RUN_USER

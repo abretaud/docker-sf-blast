@@ -64,20 +64,6 @@ if ! [[ $DB_CONNECTABLE -eq 0 ]]; then
     exit "${DB_CONNECTABLE}"
 fi
 
-
-### Initial setup if database doesn't exist
-
-# Check if tables are there and that drush works
-DB_LOADED=$(PGPASSWORD=$DB_PASS psql -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" -tAc "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'result_file');")
-if [[ $DB_LOADED != "t" ]]
-then
-	run_scripts setup
-	echo "=> Done installing site!"
-else
-	echo "=> Skipped setup - database ${DB_NAME} already exists."
-fi
-
-
 ###
 
 run_scripts pre-launch
