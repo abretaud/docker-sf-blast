@@ -4,20 +4,22 @@ MAINTAINER Anthony Bretaudeau <anthony.bretaudeau@inra.fr>
 
 WORKDIR /var/www
 
+RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7
+
 # Install packages and PHP-extensions
 RUN apt-get -q update \
 && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
     file libfreetype6 libjpeg62 libpng16-16 libpq-dev libx11-6 libxpm4 gnupg \
     postgresql-client wget patch git unzip ncbi-blast+ python-pip libyaml-dev \
-    python-dev cron libhwloc5 nodejs build-essential libssl-dev \
- && curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    python-dev python-setuptools cron libhwloc5 nodejs build-essential libssl-dev \
+    zlib1g zlib1g-dev dirmngr \
+ && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
  && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
      nodejs \
  && docker-php-ext-install mbstring pdo_pgsql zip \
  && rm -rf /var/lib/apt/lists/* \
  && a2enmod rewrite && a2enmod proxy && a2enmod proxy_http \
  && npm install -g uglify-js uglifycss \
- && ln -s /usr/bin/nodejs /usr/bin/node \
  && ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libssl.so.10 \
  && ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/lib/x86_64-linux-gnu/libcrypto.so.10
 
