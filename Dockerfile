@@ -1,4 +1,5 @@
-FROM php:7-apache
+# switching to the newer stretch fails at genouest because libdrmaa.so was compiled with an older openssl
+FROM php:7.1-apache-jessie
 
 MAINTAINER Anthony Bretaudeau <anthony.bretaudeau@inra.fr>
 
@@ -9,7 +10,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7
 # Install packages and PHP-extensions
 RUN apt-get -q update \
 && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
-    file libfreetype6 libjpeg62 libpng16-16 libpq-dev libx11-6 libxpm4 gnupg \
+    file libfreetype6 libjpeg62-turbo libpng12-0 libpq-dev libx11-6 libxpm4 gnupg \
     postgresql-client wget patch git unzip ncbi-blast+ python-pip libyaml-dev \
     python-dev python-setuptools cron libhwloc5 nodejs build-essential libssl-dev \
     zlib1g zlib1g-dev dirmngr \
