@@ -105,7 +105,8 @@ class LinkInjector():
             if not full_db:
                 if not line.startswith(' '):
                     current_db += line
-                else: full_db = True
+                else:
+                    full_db = True
 
                 print(line, file=self.args.outfile)
                 continue
