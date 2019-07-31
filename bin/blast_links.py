@@ -103,9 +103,10 @@ class LinkInjector():
                 continue # We have not yet (or just) reached the database line, skip to next line
 
             if not full_db:
-                full_db = True # We consider that there will not be db names longer than 2 lines
                 if not line.startswith(' '):
                     current_db += line
+                else:
+                    full_db = True
 
                 print(line, file=self.args.outfile)
                 continue
