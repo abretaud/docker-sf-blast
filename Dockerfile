@@ -53,7 +53,8 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
 ENV CACHE_BUST=4
 
 # Install Symfony and blast bundles
-RUN composer create-project symfony/framework-standard-edition --quiet blast "2.8.*" \
+RUN echo "memory_limit = -1" > $PHP_INI_DIR'/conf.d/memory-limit.ini' \
+    && composer create-project symfony/framework-standard-edition --quiet blast "2.8.*" \
     && cd blast \
     && composer require genouest/bioinfo-bundle \
     && composer require genouest/scheduler-bundle \
