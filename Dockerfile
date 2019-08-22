@@ -1,5 +1,5 @@
 # switching to the newer stretch fails at genouest because libdrmaa.so was compiled with an older openssl
-FROM php:7.1-apache-jessie
+FROM php:7.1-apache-buster
 
 MAINTAINER Anthony Bretaudeau <anthony.bretaudeau@inra.fr>
 
@@ -10,13 +10,13 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7
 # Install packages and PHP-extensions
 RUN apt-get -q update \
 && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
-    file libfreetype6 libjpeg62-turbo libpng12-0 libpq-dev libx11-6 libxpm4 gnupg \
+    file libfreetype6 libjpeg62-turbo libpng16-16 libpq-dev libx11-6 libxpm4 gnupg \
     postgresql-client wget patch git unzip ncbi-blast+ python-pip libyaml-dev \
-    python-dev python-setuptools cron libhwloc5 nodejs build-essential libssl-dev \
-    zlib1g zlib1g-dev dirmngr \
+    python-dev python-setuptools cron libhwloc5 build-essential libssl-dev \
+    zlib1g zlib1g-dev dirmngr libslurm33 libslurmdb33 slurm-client munge \
  && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
  && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
-     nodejs \
+     nodejs npm \
  && docker-php-ext-install mbstring pdo_pgsql zip \
  && rm -rf /var/lib/apt/lists/* \
  && a2enmod rewrite && a2enmod proxy && a2enmod proxy_http \
@@ -24,20 +24,27 @@ RUN apt-get -q update \
  && ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libssl.so.10 \
  && ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/lib/x86_64-linux-gnu/libcrypto.so.10
 
- ENV TINI_VERSION v0.9.0
- RUN set -x \
+ENV TINI_VERSION v0.9.0
+RUN set -x \
      && curl -fSL "https://github.com/krallin/tini/releases/download/$TINI_VERSION/tini" -o /usr/local/bin/tini \
      && chmod +x /usr/local/bin/tini
 
- ENTRYPOINT ["/usr/local/bin/tini", "--"]
+ENTRYPOINT ["/usr/local/bin/tini", "--"]
 
-# Install PHP DRMAA extension
+# Some env var for slurm only
+ENV DRMAA_LIB_DIR /etc/slurm-llnl/drmaa
+
+# Download PHP DRMAA extension code
+# Slurm version
+RUN cd /opt/ \
+    && git clone https://github.com/genouest/php_drmaa.git \
+    && mv /usr/local/bin/php /usr/local/bin/php_orig
+# SGE version
 RUN curl -o /opt/drmPhpExtension_1.2.tar.gz https://gforge.inria.fr/frs/download.php/file/28916/drmPhpExtension_1.2.tar.gz \
     && cd /opt/ \
     && tar -xzvf drmPhpExtension_1.2.tar.gz \
     && rm drmPhpExtension_1.2.tar.gz \
-    && sed -i 's/RETURN_STRING(jobid, 1)/RETURN_STRING(jobid)/g' sge/sge.c \
-    && mv /usr/local/bin/php /usr/local/bin/php_orig
+    && sed -i 's/RETURN_STRING(jobid, 1)/RETURN_STRING(jobid)/g' sge/sge.c
 
 ADD php/php_wrapper.sh /usr/local/bin/php
 
@@ -49,8 +56,6 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" \
     && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer --snapshot \
     && rm -f /tmp/composer-setup.*
-
-ENV CACHE_BUST=4
 
 # Install Symfony and blast bundles
 RUN echo "memory_limit = -1" > $PHP_INI_DIR'/conf.d/memory-limit.ini' \
@@ -82,6 +87,11 @@ ENV DB_HOST='postgres'\
     ADMIN_EMAIL='root@blast'\
     ADMIN_NAME='Blast server'\
     JOBS_METHOD='local'\
+    DRMAA_METHOD='slurm' \
+    SLURMGID='992' \
+    SLURMUID='992' \
+    MUNGEGID='991' \
+    MUNGEUID='991' \
     JOBS_WORK_DIR='/tmp/'\
     JOBS_DRMAA_NATIVE=''\
     CDD_DELTA_PATH=''\
@@ -90,6 +100,10 @@ ENV DB_HOST='postgres'\
     PRE_CMD=''\
     LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml --gff-url \$GFF3_URL'\
     BASE_URL_PATH='/'
+
+RUN mkdir /var/spool/slurmctld /var/spool/slurmd /var/run/slurm /var/log/slurm && \
+    chown -R slurm:slurm /var/spool/slurmctld /var/spool/slurmd /var/run/slurm /var/log/slurm && \
+    chmod 755 /var/spool/slurmctld /var/spool/slurmd /var/run/slurm /var/log/slurm
 
 ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/Bundle/BlastBundle/Entity/BlastRequest.php
 

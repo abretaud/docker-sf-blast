@@ -1,5 +1,7 @@
 # Docker Image for a Blast form based on Symfony
 
+[![Docker Repository on Quay](https://quay.io/repository/abretaud/sf-blast/status "Docker Repository on Quay")](https://quay.io/repository/abretaud/sf-blast)
+
 This image contains a ready-to-go blast form based on the Symfony framework.
 
 ## Using the Container
@@ -114,23 +116,44 @@ JOBS_METHOD: 'local' # Should the jobs be executed locally ('local'), or on a cl
 JOBS_WORK_DIR: '/tmp/' # Directory where job files will be created. Is using DRMAA, must be mounted on computing nodes, at the same location
 JOBS_DRMAA_NATIVE: '' # Any native specification you want to pass to DRMAA (when JOBS_METHOS='drmaa', e.g. '-q dev')
 JOBS_SCHED_NAME: 'blast' # The names given to jobs (in particular for drmaa jobs)
+
+DRMAA_METHOD: 'slurm' # 'sge' or 'slurm' depending on the cluster type you are using
+SLURMGID: '992' # the gid of the slurm group (should be the same as on your slurm cluster)
+SLURMUID: '992' # the uid of the slurm user (should be the same as on your slurm cluster)
+MUNGEGID: '991' # the gid of the munge group (should be the same as on your slurm cluster)
+MUNGEUID: '991' # the uid of the munge user (should be the same as on your slurm cluster)
 ```
 
 ## Using DRMAA
 
-To use DRMAA, you need to pay attention to several things (only tested with SGE):
+To use DRMAA, you need to pay attention to several things (only tested with SGE and Slurm):
 
-### Scheduler binaries
+### Slurm
 
-Depending on your cluster setup, you will probably need to mount a shared directory containing the scheduler binaries.
-It should be mounted in /usr/local/sge/.
+Slurm libraries are installed in version 18.08 (from Debian Buster). It should match the version installed on your cluster to work properly.
+
+#### Environment variables
+
+If you're using Slurm, you should set the `DRMAA_METHOD` environment variable to `slurm`
+
+#### Mounts
+
+You need to mount the slurm configuration files from your cluster to the /etc/slurm-llnl/ directory.
+You also need to mount the libdrmaa.so library to $DRMAA_LIB_DIR directory (/etc/slurm-llnl/drmaa/ by default).
+And you need to mount the munge conf directory which stores the munge key specific to your cluster.
+All this shouldlook something like that:
 
 ```
 volumes:
-    - /sge/:/usr/local/sge/:ro
+  - /etc/slurm/slurm.conf:/etc/slurm-llnl/slurm.conf:ro
+  - /etc/slurm/gres.conf:/etc/slurm-llnl/gres.conf:ro
+  - /etc/slurm/cgroup.conf:/etc/slurm-llnl/cgroup.conf:ro
+  - /etc/slurm/slurmdbd.conf:/etc/slurm-llnl/slurmdbd.conf:ro
+  - /etc/slurm/drmaa/:/etc/slurm-llnl/drmaa/:ro
+  - /etc/munge/:/etc/munge/:ro
 ```
 
-### DRMAA user
+#### DRMAA user
 
 Jobs will probably need to be launched by a user known by the scheduler. You will to use the following options to configure this:
 
@@ -143,7 +166,38 @@ GID: 40259
 
 When launching the container, it will automatically configure itself to run apache with the user and group names and ids specified.
 
-### Dealing with restriction on submission node
+### With SGE
+
+Please note that the latest version of this image was not tested with SGE. It should work in theory, but not guaranteed.
+
+#### Environment variables
+
+If you're using SGE, you should set the `DRMAA_METHOD` environment variable to `sge`
+
+#### Mounts
+
+Depending on your cluster setup, you will probably need to mount a shared directory containing the scheduler binaries.
+It should be mounted to /usr/local/sge/
+
+```
+volumes:
+    - /sge/:/usr/local/sge/:ro
+```
+
+#### DRMAA user
+
+Jobs will probably need to be launched by a user known by the scheduler. You will to use the following options to configure this:
+
+```
+APACHE_RUN_USER: 'submituser'
+APACHE_RUN_GROUP: 'submitgroup'
+UID: 55914
+GID: 40259
+```
+
+When launching the container, it will automatically configure itself to run apache with the user and group names and ids specified.
+
+#### Dealing with restriction on submission node
 
 By default the container is using the default docker `bridge` network. One of the consequence is that the container's hostname is a random string.
 As SGE allows submitting jobs from a list of known hostname, having a variable hostname is a problem.
@@ -165,6 +219,6 @@ The master node does some checks on the hostname and corresponding ip, so you mi
 <docker-host-ip> my_blast <real-name-of-the-docker-host>
 ```
 
-### Blast binaries
+### Blast binaries (SGE and Slurm)
 
 When using drmaa, ensure that blast binaries + python (with bcbio-gff, yaml and yamlordereddictloader modules) are in the PATH (using PRE_CMD).

@@ -69,7 +69,8 @@ fi
 run_scripts pre-launch
 
 if [ "$JOBS_METHOD" == "drmaa" ]; then
-    export LD_PRELOAD="/usr/local/sge/lib/lx-amd64/libdrmaa.so /usr/local/lib/php/extensions/no-debug-non-zts-20160303/sge.so"
+    export LD_PRELOAD="$DRMAA_LIB_DIR/lib/libdrmaa.so /usr/local/lib/php/extensions/no-debug-non-zts-20160303/drmaa.so"
+		/etc/init.d/munge start
 fi
 
 exec apache2-foreground

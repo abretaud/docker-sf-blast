@@ -1,0 +1,14 @@
+if [ "$JOBS_METHOD" == "drmaa" ]; then
+    if [ "$DRMAA_METHOD" == "slurm" ]; then
+        # Install PHP DRMAA extension
+        # Needs to be done at startup as it must be compiled with mounted drmaa install
+
+        echo "Compiling PHP DRMAA extension"
+        LD_LIBRARY_PATH=$DRMAA_LIB_DIR/lib/:$LD_LIBRARY_PATH
+        cd /opt/php_drmaa
+        ./configure --with-drmaa=$DRMAA_LIB_DIR
+        make
+        make install
+        echo "extension=drmaa.so" > $PHP_INI_DIR/conf.d/docker-php-ext-drmaa.ini
+    fi
+fi
