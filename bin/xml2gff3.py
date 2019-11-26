@@ -10,6 +10,7 @@ from BCBio import GFF
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(name='blastxml2gff3')
 
+
 def blastxml2gff3(blastxml):
     from Bio.Blast import NCBIXML
     from Bio.Seq import Seq
@@ -23,10 +24,16 @@ def blastxml2gff3(blastxml):
         match_type = 'match'
 
         for hit in record.alignments:
-            if hit.accession in records:
-                rec = records[hit.accession]
+            # Was using hit.accession but it remvoes the version suffix (often .1) from hit id
+            accession = hit.accession
+            search = re.search(r'\w+\|([a-zA-Z0-9_.-]+)\|.*', hit.hit_id)
+            if search:
+                accession = search.group(1)
+
+            if accession in records:
+                rec = records[accession]
             else:
-                rec = SeqRecord(Seq("ACTG"), id=hit.accession)
+                rec = SeqRecord(Seq("ACTG"), id=accession)
 
             for hsp in hit.hsps:
                 if hsp.frame[1] < 0:
@@ -38,7 +45,7 @@ def blastxml2gff3(blastxml):
                 qualifiers = {
                     "source": "blast",
                     "score": hsp.expect,
-                    "accession": hit.accession,
+                    "accession": accession,
                     "hit_name": record.query,
                     "Name": record.query
                 }
@@ -82,10 +89,8 @@ def blastxml2gff3(blastxml):
 
                 rec.features.append(top_feature)
             rec.annotations = {}
-            records[hit.hit_id] = rec
+            records[accession] = rec
     return records.values()
-
-
 
 
 if __name__ == '__main__':

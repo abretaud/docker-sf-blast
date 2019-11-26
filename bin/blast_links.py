@@ -5,8 +5,11 @@
 from __future__ import print_function
 
 import argparse
-import os, sys, shutil
-import re, yaml, yamlordereddictloader
+import os
+import sys
+import re
+import yaml
+import yamlordereddictloader
 
 
 class LinkInjector():
@@ -16,7 +19,7 @@ class LinkInjector():
         self.db_regex = "^Database: (.+)$"
         self.summary_regex = "^Sequences producing significant alignments:"
 
-        self.links = [] # Contains the cleanup configuration for link injection
+        self.links = []  # Contains the cleanup configuration for link injection
 
     def main(self):
 
@@ -29,15 +32,15 @@ class LinkInjector():
     def parse_args(self):
 
         parser = argparse.ArgumentParser()
-        parser.add_argument('--config', help='Path to a config file (default=links_config.yml in script directory)' )
-        parser.add_argument('--gff-url', help='URL to GFF3 file' )
+        parser.add_argument('--config', help='Path to a config file (default=links_config.yml in script directory)')
+        parser.add_argument('--gff-url', help='URL to GFF3 file')
         parser.add_argument('infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
         parser.add_argument('outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
         self.args = parser.parse_args()
 
     def load_config(self):
 
-        """
+        r"""
         Syntax exampe (YAML) is following.
         The regex are tested in the same order as written in yaml and it stops searching after the first match.
         You don't need to add the "lcl|" prefix to seq id regex, a generic regex is added by this script (if you don't want it, start your regex with ^)
@@ -70,24 +73,24 @@ class LinkInjector():
                     db = '.+'
 
                 for regex in conf_cat:
-                    if regex != 'db': # skip db line
+                    if regex != 'db':  # skip db line
                         url = conf_cat[regex]
                         url.replace('{gff_url}', self.args.gff_url)
-                        if regex == '*': # Add a default regex
-                            regex = '([\w.-]+)'
-                        if not regex.startswith('^'): # Add the seq id prefix rule (e.g. 'lcl|' or '>lcl|', ...)
-                            regex = '^(\s*>?(?:[\w.-]+\|)?)?' + regex
-                        if url.startswith('http'): # Convert simple url to html link
+                        if regex == '*':  # Add a default regex
+                            regex = r'([\w.-]+)'
+                        if not regex.startswith('^'):  # Add the seq id prefix rule (e.g. 'lcl|' or '>lcl|', ...)
+                            regex = r'^(\s*>?(?:[\w.-]+\|)?)?' + regex
+                        if url.startswith('http'):  # Convert simple url to html link
                             url = '<a href="%s">{id}</a>' % url
-                        self.links.append((db, regex,  url))
+                        self.links.append((db, regex, url))
 
     def parse_html(self):
 
-        current_db = None # Name of the blast database that was used
-        full_db = None # Are we sure the name is full (in case of long name on multiple lines)
-        reached_summary = False # Did we reached the beginning of the summary?
-        started_summary = False # Did we start to inject links in the summary?
-        finished_summary = False # Did we pass the end of the summary?
+        current_db = None  # Name of the blast database that was used
+        full_db = None  # Are we sure the name is full (in case of long name on multiple lines)
+        reached_summary = False  # Did we reached the beginning of the summary?
+        started_summary = False  # Did we start to inject links in the summary?
+        finished_summary = False  # Did we pass the end of the summary?
 
         for line in self.args.infile:
 
@@ -100,7 +103,7 @@ class LinkInjector():
                     current_db = search.group(1)
 
                 print(line, file=self.args.outfile)
-                continue # We have not yet (or just) reached the database line, skip to next line
+                continue  # We have not yet (or just) reached the database line, skip to next line
 
             if not full_db:
                 if not line.startswith(' '):
@@ -117,7 +120,7 @@ class LinkInjector():
                     reached_summary = True
 
                 print(line, file=self.args.outfile)
-                continue # We have not yet (or just) reached the database line, skip to next line
+                continue  # We have not yet (or just) reached the database line, skip to next line
 
             # The summary really starts after a blank line
             if reached_summary and not started_summary:
@@ -144,7 +147,7 @@ class LinkInjector():
             # Sometimes the html contains an aditional tag for the first alignment of a query
             if line.startswith('<script src="blastResult.js"></script>'):
                 script_tag_len = len('<script src="blastResult.js"></script>')
-                print(line[:script_tag_len] + '\n', file=self.args.outfile) # split the line to ease replacement
+                print(line[:script_tag_len] + '\n', file=self.args.outfile)  # split the line to ease replacement
                 line = self.inject_link(current_db, line[script_tag_len:])
 
             # Detect when we switch to another query
@@ -174,7 +177,7 @@ class LinkInjector():
                     clean_link = clean_link.replace('{id}', seq_id)
                     clean_link = clean_link.replace('{jbrowse_track}', jbrowse_track)
                     clean_link = clean_link.replace('{apollo_track}', apollo_track)
-                    return re.sub(rule[1], '\\1'+clean_link, line)
+                    return re.sub(rule[1], '\\1' + clean_link, line)
 
         return line
 
