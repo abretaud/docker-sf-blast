@@ -69,6 +69,9 @@ RUN echo "memory_limit = -1" > $PHP_INI_DIR'/conf.d/memory-limit.ini' \
     && sed -i '/\$bundles = array/a new Genouest\\Bundle\\SchedulerBundle\\GenouestSchedulerBundle(),' app/AppKernel.php \
     && sed -i '/\$bundles = array/a new Genouest\\Bundle\\BlastBundle\\GenouestBlastBundle(),' app/AppKernel.php \
     && sed -i '/\$bundles = array/a new Symfony\\Bundle\\AsseticBundle\\AsseticBundle(),' app/AppKernel.php \
+    && sed -i 's|, UrlGeneratorInterface::RELATIVE_PATH||' vendor/genouest/scheduler-bundle/Genouest/Bundle/SchedulerBundle/Controller/SchedulerController.php \
+    && sed -i 's|$this->generateUrl|rtrim($this->container->getParameter("base_url_path"), "/") . $this->generateUrl|' vendor/genouest/scheduler-bundle/Genouest/Bundle/SchedulerBundle/Controller/SchedulerController.php \
+    && sed -i 's|$this->generateUrl|rtrim($this->container->getParameter("base_url_path"), "/") . $this->generateUrl|' vendor/genouest/blast-bundle/Genouest/Bundle/BlastBundle/Controller/BlastController.php \
     && rm web/favicon.ico \
     && cd .. \
     && rm -rf html \
