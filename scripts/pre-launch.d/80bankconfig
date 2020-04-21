@@ -1,0 +1,5 @@
+if [ ! -f /var/www/blast/app/config/banks.yml ]; then
+  if [ -f /etc/blast_links/banks.yml ]; then
+    ln -s /etc/blast_links/banks.yml /var/www/blast/app/config/banks.yml
+  fi
+fi

@@ -34,8 +34,7 @@ services:
       PRE_CMD: ''
       LINK_CMD: ''
     volumes:
-      - ./config/banks.yml:/var/www/blast/app/config/banks.yml:ro
-      - ./config/links.yml:/etc/blast_links/links.yml:ro
+      - ./config/:/etc/blast_links/:ro
     ports:
       - "3000:80"
   db:
