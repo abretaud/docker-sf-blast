@@ -1,6 +1,6 @@
 if [ -f /etc/blast_links/banks.yml ]; then
   if [ -f /var/www/blast/app/config/banks.yml ]; then
-    mv /var/www/blast/app/config/banks.yml.template
+    mv /var/www/blast/app/config/banks.yml /var/www/blast/app/config/banks.yml.template
   fi
   ln -s /etc/blast_links/banks.yml /var/www/blast/app/config/banks.yml
 fi
