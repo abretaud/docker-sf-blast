@@ -27,6 +27,7 @@ sed -i 's/$JOBS_SCHED_NAME/'"$JOBS_SCHED_NAME"'/g' /var/www/blast/app/config/par
 sed -i 's|$CDD_DELTA_PATH|'"$CDD_DELTA_PATH"'|g' /var/www/blast/app/config/parameters.yml
 
 sed -i 's|$BASE_URL_PATH|'"$BASE_URL_PATH"'|g' /var/www/blast/app/config/parameters.yml
+sed -i 's|$RESULT_URL_HOST|'"$RESULT_URL_HOST"'|g' /var/www/blast/app/config/parameters.yml
 
 cd /var/www/blast
 

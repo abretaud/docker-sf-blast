@@ -102,7 +102,8 @@ ENV DB_HOST='postgres'\
     JOBS_SCHED_NAME='blast'\
     PRE_CMD=''\
     LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml --gff-url \$GFF3_URL'\
-    BASE_URL_PATH='/'
+    BASE_URL_PATH='/'\
+    RESULT_URL_HOST=''
 
 RUN mkdir /var/spool/slurmctld /var/spool/slurmd /var/run/slurm /var/log/slurm && \
     chown -R slurm:slurm /var/spool/slurmctld /var/spool/slurmd /var/run/slurm /var/log/slurm && \
