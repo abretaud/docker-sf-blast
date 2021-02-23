@@ -1,0 +1,11 @@
+pyaml
+yamlordereddictloader
+bcbio-gff
+numpy
+biopython
+
+# This is for influxdb stuff
+sqlalchemy
+click
+psycopg2-binary
+influxdb

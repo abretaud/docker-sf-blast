@@ -73,6 +73,10 @@ if [ "$JOBS_METHOD" == "drmaa" ]; then
 		/etc/init.d/munge start
 fi
 
+if [ ! -z "${INFLUX_HOST}" ]; then
+	/monitoring/monitor.sh &
+fi
+
 exec apache2-foreground
 
 exit 1

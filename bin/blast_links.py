@@ -2,8 +2,6 @@
 
 # A script to add links to blast results (HTML file)
 
-from __future__ import print_function
-
 import argparse
 import os
 import sys

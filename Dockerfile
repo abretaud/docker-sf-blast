@@ -1,4 +1,3 @@
-# switching to the newer stretch fails at genouest because libdrmaa.so was compiled with an older openssl
 FROM php:7.1-apache-buster
 
 MAINTAINER Anthony Bretaudeau <anthony.bretaudeau@inra.fr>
@@ -11,8 +10,8 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7
 RUN apt-get -q update \
 && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
     file libfreetype6 libjpeg62-turbo libpng16-16 libpq-dev libx11-6 libxpm4 gnupg \
-    postgresql-client wget patch git unzip ncbi-blast+ python-pip libyaml-dev \
-    python-dev python-setuptools cron libhwloc5 build-essential libssl-dev \
+    postgresql-client wget patch git unzip ncbi-blast+ python3-pip python3-setuptools python3-wheel \
+    cron libhwloc5 build-essential libssl-dev \
     zlib1g zlib1g-dev dirmngr libslurm33 libslurmdb33 slurm-client munge \
  && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
  && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
@@ -22,7 +21,8 @@ RUN apt-get -q update \
  && a2enmod rewrite && a2enmod proxy && a2enmod proxy_http \
  && npm install -g uglify-js uglifycss \
  && ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libssl.so.10 \
- && ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/lib/x86_64-linux-gnu/libcrypto.so.10
+ && ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/lib/x86_64-linux-gnu/libcrypto.so.10 \
+ && update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 ENV TINI_VERSION v0.9.0
 RUN set -x \
@@ -48,7 +48,9 @@ RUN curl -o /opt/drmPhpExtension_1.2.tar.gz https://gforge.inria.fr/frs/download
 
 ADD php/php_wrapper.sh /usr/local/bin/php
 
-RUN pip install pyaml==17.12.1 yamlordereddictloader==0.4.0 bcbio-gff==0.6.4 numpy==1.15.1 biopython==1.72
+ADD requirements.txt /tmp/requirements.txt
+
+RUN pip3 install -r /tmp/requirements.txt
 
 # Install composer
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
@@ -101,15 +103,23 @@ ENV DB_HOST='postgres'\
     BLAST_TITLE=''\
     JOBS_SCHED_NAME='blast'\
     PRE_CMD=''\
-    LINK_CMD='python ./bin/blast_links.py --config ./bin/links.yml --gff-url \$GFF3_URL'\
+    LINK_CMD='python3 ./bin/blast_links.py --config ./bin/links.yml --gff-url \$GFF3_URL'\
     BASE_URL_PATH='/'\
-    RESULT_URL_HOST=''
+    RESULT_URL_HOST='""'
+
+# Influxdb stuff
+ENV DELAY=1440 \
+    INFLUX_HOST='' \
+    INFLUX_PORT=8086 \
+    INFLUX_DB=sfblast
 
 RUN mkdir /var/spool/slurmctld /var/spool/slurmd /var/run/slurm /var/log/slurm && \
     chown -R slurm:slurm /var/spool/slurmctld /var/spool/slurmd /var/run/slurm /var/log/slurm && \
     chmod 755 /var/spool/slurmctld /var/spool/slurmd /var/run/slurm /var/log/slurm
 
 ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/Bundle/BlastBundle/Entity/BlastRequest.php
+
+ADD monitoring/ /monitoring/
 
 ADD entrypoint.sh /
 ADD /scripts/ /scripts/
