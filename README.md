@@ -116,7 +116,7 @@ JOBS_WORK_DIR: '/tmp/' # Directory where job files will be created. Is using DRM
 JOBS_DRMAA_NATIVE: '' # Any native specification you want to pass to DRMAA (when JOBS_METHOS='drmaa', e.g. '-q dev')
 JOBS_SCHED_NAME: 'blast' # The names given to jobs (in particular for drmaa jobs)
 
-DRMAA_METHOD: 'slurm' # 'sge' or 'slurm' depending on the cluster type you are using
+DRMAA_METHOD: 'slurm' # 'slurm' ('sge' no longer supported)')
 SLURMGID: '992' # the gid of the slurm group (should be the same as on your slurm cluster)
 SLURMUID: '992' # the uid of the slurm user (should be the same as on your slurm cluster)
 MUNGEGID: '991' # the gid of the munge group (should be the same as on your slurm cluster)
@@ -125,7 +125,7 @@ MUNGEUID: '991' # the uid of the munge user (should be the same as on your slurm
 
 ## Using DRMAA
 
-To use DRMAA, you need to pay attention to several things (only tested with SGE and Slurm):
+To use DRMAA, you need to pay attention to several things (only tested with Slurm):
 
 ### Slurm
 
@@ -164,10 +164,6 @@ GID: 40259
 ```
 
 When launching the container, it will automatically configure itself to run apache with the user and group names and ids specified.
-
-### With SGE
-
-Please note that the latest version of this image was not tested with SGE. It should work in theory, but not guaranteed.
 
 #### Environment variables
 

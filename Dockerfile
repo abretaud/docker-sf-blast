@@ -46,12 +46,6 @@ ENV DRMAA_LIB_DIR /etc/slurm/drmaa
 RUN cd /opt/ \
     && git clone https://github.com/genouest/php_drmaa.git \
     && mv /usr/local/bin/php /usr/local/bin/php_orig
-# SGE version
-RUN curl -o /opt/drmPhpExtension_1.2.tar.gz https://gforge.inria.fr/frs/download.php/file/28916/drmPhpExtension_1.2.tar.gz \
-    && cd /opt/ \
-    && tar -xzvf drmPhpExtension_1.2.tar.gz \
-    && rm drmPhpExtension_1.2.tar.gz \
-    && sed -i 's/RETURN_STRING(jobid, 1)/RETURN_STRING(jobid)/g' sge/sge.c
 
 ADD php/php_wrapper.sh /usr/local/bin/php
 
