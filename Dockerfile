@@ -6,13 +6,20 @@ WORKDIR /var/www
 
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7
 
+ADD apt_genouest_priority /etc/apt/preferences.d/apt_genouest_priority
+
 # Install packages and PHP-extensions
 RUN apt-get -q update \
+&& DEBIAN_FRONTEND=noninteractive apt-get -yq upgrade \
+&& DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install gnupg2 \
+&& echo "deb https://apt.genouest.org/ buster main" > /etc/apt/sources.list.d/slurm_genouest.list \
+&& apt-key adv --keyserver keyserver.ubuntu.com --recv-key 64D3DCC02B3AC23A8D96059FC41FF1AADA6E6518  \
+&& apt-get -q update \
 && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
     file libfreetype6 libjpeg62-turbo libpng16-16 libpq-dev libx11-6 libxpm4 gnupg \
     postgresql-client wget patch git unzip ncbi-blast+ python3-pip python3-setuptools python3-wheel \
     cron libhwloc5 build-essential libssl-dev \
-    zlib1g zlib1g-dev dirmngr libslurm33 libslurmdb33 slurm-client munge \
+    zlib1g zlib1g-dev dirmngr libslurm35 slurm-client munge \
  && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
  && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
      nodejs npm \
@@ -32,7 +39,7 @@ RUN set -x \
 ENTRYPOINT ["/usr/local/bin/tini", "--"]
 
 # Some env var for slurm only
-ENV DRMAA_LIB_DIR /etc/slurm-llnl/drmaa
+ENV DRMAA_LIB_DIR /etc/slurm/drmaa
 
 # Download PHP DRMAA extension code
 # Slurm version
@@ -122,6 +129,7 @@ ADD form/BlastRequest.php /var/www/blast/vendor/genouest/blast-bundle/Genouest/B
 ADD monitoring/ /monitoring/
 
 ADD entrypoint.sh /
+ADD startup_tasks.sh /
 ADD /scripts/ /scripts/
 ADD bin/blast_links.py /usr/local/bin/blast_links.py
 ADD bin/xml2gff3.py /usr/local/bin/xml2gff3.py

@@ -137,18 +137,18 @@ If you're using Slurm, you should set the `DRMAA_METHOD` environment variable to
 
 #### Mounts
 
-You need to mount the slurm configuration files from your cluster to the /etc/slurm-llnl/ directory.
-You also need to mount the libdrmaa.so library to $DRMAA_LIB_DIR directory (/etc/slurm-llnl/drmaa/ by default).
+You need to mount the slurm configuration files from your cluster to the /etc/slurm/ directory.
+You also need to mount the libdrmaa.so library to $DRMAA_LIB_DIR directory (/etc/slurm/drmaa/ by default).
 And you need to mount the munge conf directory which stores the munge key specific to your cluster.
 All this shouldlook something like that:
 
 ```
 volumes:
-  - /etc/slurm/slurm.conf:/etc/slurm-llnl/slurm.conf:ro
-  - /etc/slurm/gres.conf:/etc/slurm-llnl/gres.conf:ro
-  - /etc/slurm/cgroup.conf:/etc/slurm-llnl/cgroup.conf:ro
-  - /etc/slurm/slurmdbd.conf:/etc/slurm-llnl/slurmdbd.conf:ro
-  - /etc/slurm/drmaa/:/etc/slurm-llnl/drmaa/:ro
+  - /etc/slurm/slurm.conf:/etc/slurm/slurm.conf:ro
+  - /etc/slurm/gres.conf:/etc/slurm/gres.conf:ro
+  - /etc/slurm/cgroup.conf:/etc/slurm/cgroup.conf:ro
+  - /etc/slurm/slurmdbd.conf:/etc/slurm/slurmdbd.conf:ro
+  - /etc/slurm/drmaa/:/etc/slurm/drmaa/:ro
   - /etc/munge/:/etc/munge/:ro
 ```
 
