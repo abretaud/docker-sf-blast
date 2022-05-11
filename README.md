@@ -116,7 +116,7 @@ JOBS_WORK_DIR: '/tmp/' # Directory where job files will be created. Is using DRM
 JOBS_DRMAA_NATIVE: '' # Any native specification you want to pass to DRMAA (when JOBS_METHOS='drmaa', e.g. '-q dev')
 JOBS_SCHED_NAME: 'blast' # The names given to jobs (in particular for drmaa jobs)
 
-DRMAA_METHOD: 'slurm' # 'sge' or 'slurm' depending on the cluster type you are using
+DRMAA_METHOD: 'slurm' # 'slurm' ('sge' no longer supported)')
 SLURMGID: '992' # the gid of the slurm group (should be the same as on your slurm cluster)
 SLURMUID: '992' # the uid of the slurm user (should be the same as on your slurm cluster)
 MUNGEGID: '991' # the gid of the munge group (should be the same as on your slurm cluster)
@@ -125,7 +125,7 @@ MUNGEUID: '991' # the uid of the munge user (should be the same as on your slurm
 
 ## Using DRMAA
 
-To use DRMAA, you need to pay attention to several things (only tested with SGE and Slurm):
+To use DRMAA, you need to pay attention to several things (only tested with Slurm):
 
 ### Slurm
 
@@ -137,18 +137,18 @@ If you're using Slurm, you should set the `DRMAA_METHOD` environment variable to
 
 #### Mounts
 
-You need to mount the slurm configuration files from your cluster to the /etc/slurm-llnl/ directory.
-You also need to mount the libdrmaa.so library to $DRMAA_LIB_DIR directory (/etc/slurm-llnl/drmaa/ by default).
+You need to mount the slurm configuration files from your cluster to the /etc/slurm/ directory.
+You also need to mount the libdrmaa.so library to $DRMAA_LIB_DIR directory (/etc/slurm/drmaa/ by default).
 And you need to mount the munge conf directory which stores the munge key specific to your cluster.
 All this shouldlook something like that:
 
 ```
 volumes:
-  - /etc/slurm/slurm.conf:/etc/slurm-llnl/slurm.conf:ro
-  - /etc/slurm/gres.conf:/etc/slurm-llnl/gres.conf:ro
-  - /etc/slurm/cgroup.conf:/etc/slurm-llnl/cgroup.conf:ro
-  - /etc/slurm/slurmdbd.conf:/etc/slurm-llnl/slurmdbd.conf:ro
-  - /etc/slurm/drmaa/:/etc/slurm-llnl/drmaa/:ro
+  - /etc/slurm/slurm.conf:/etc/slurm/slurm.conf:ro
+  - /etc/slurm/gres.conf:/etc/slurm/gres.conf:ro
+  - /etc/slurm/cgroup.conf:/etc/slurm/cgroup.conf:ro
+  - /etc/slurm/slurmdbd.conf:/etc/slurm/slurmdbd.conf:ro
+  - /etc/slurm/drmaa/:/etc/slurm/drmaa/:ro
   - /etc/munge/:/etc/munge/:ro
 ```
 
@@ -164,10 +164,6 @@ GID: 40259
 ```
 
 When launching the container, it will automatically configure itself to run apache with the user and group names and ids specified.
-
-### With SGE
-
-Please note that the latest version of this image was not tested with SGE. It should work in theory, but not guaranteed.
 
 #### Environment variables
 
