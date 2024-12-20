@@ -12,14 +12,14 @@ ADD apt_genouest_priority /etc/apt/preferences.d/apt_genouest_priority
 RUN apt-get -q update \
 && DEBIAN_FRONTEND=noninteractive apt-get -yq upgrade \
 && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install gnupg2 \
-&& echo "deb https://apt.genouest.org/ buster main" > /etc/apt/sources.list.d/slurm_genouest.list \
+&& echo "deb https://apt.genouest.org/buster/ buster main" > /etc/apt/sources.list.d/slurm_genouest.list \
 && apt-key adv --keyserver keyserver.ubuntu.com --recv-key 64D3DCC02B3AC23A8D96059FC41FF1AADA6E6518  \
 && apt-get -q update \
 && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
     file libfreetype6 libjpeg62-turbo libpng16-16 libpq-dev libx11-6 libxpm4 gnupg \
     postgresql-client wget patch git unzip ncbi-blast+ python3-pip python3-dev python3-setuptools python3-wheel \
     cron libhwloc5 build-essential libssl-dev \
-    zlib1g zlib1g-dev dirmngr libslurm37 slurm-client munge nano \
+    zlib1g zlib1g-dev dirmngr libslurm39 "slurm-client=23.02.6*" munge nano \
  && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
  && DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
      nodejs npm \
